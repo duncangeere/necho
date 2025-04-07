@@ -59,13 +59,13 @@ vec3 fbm(vec3 x, float H )
     float f = 1.0;
     float a = 1.0;
     vec3 t = vec3(0.0);
-    for( int i=0; i<4; i++ )
+    for( int i=0; i<5; i++ )
     {
         t += a*noise(f*x + float(i * i));
         f *= 2.0;
         a *= G;
       t.xz *= rot(u_time * -1.);
-       x += t.zxy * 0.1;
+       x += t.zxy * 0.4;
     }
     return t;
 }
@@ -118,7 +118,7 @@ n *= shatter;
   
   vec3 fbm2 = fbm2(n+p, 0.7);
   
-float pct = smoothstep(0.000, 0.005, n0); //pct is set here
+float pct = smoothstep(0.000, 0.001, n0); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(fbm2.z * 0.75);
