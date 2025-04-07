@@ -16,7 +16,7 @@ float hash12(vec2 src) {
 // 3 outputs, 3 inputs
 vec3 hash33(vec3 src) {
   
-  vec3 hash =  fract(fract(cross(src.yzx * 52343.2342343, sin(fract(src * 99253.3223423))))*u_res.x);
+  vec3 hash =  fract(fract(cross(src.yzx, sin(fract(src * vec3(5243.2342343, 934.234223, 237.1266754)))))*u_res.x);
     
   
     return hash * 1.0;
@@ -70,7 +70,7 @@ vec3 fbm(vec3 x, float H )
         f *= 2.0;
         a *= G;
       t.xz *= rot(u_time * -1.5);
-       x += t.xyz * 0.1;
+       x += t.xyz * 0.5;
     }
     return t;
 }
@@ -81,7 +81,7 @@ vec3 fbm2(vec3 x, float H )
     float f = 1.0;
     float a = 1.0;
     vec3 t = vec3(0.0);
-    for( int i=0; i<6; i++ )
+    for( int i=0; i<7; i++ )
     {
         t += a*noise2(f*x);
         f *= 2.0;
@@ -90,7 +90,7 @@ vec3 fbm2(vec3 x, float H )
        x += t * 0.5;
     }
   
-    return t * t;
+    return t * abs(t);
 }
 
 
@@ -99,14 +99,14 @@ out vec4 fragColor;
 void main(){
   
   float wobblitude = cos(u_poetry_progress * 0.5 + PI) *0.5 + 0.5;
-  float shatter = cos(u_poetry_progress * 0.3 + PI) * 0.5 + 0.5;
-  
+  float shatter = cos(u_poetry_progress * 0.2 + PI) * 0.5 + 0.5;
+
+float val = 0.0;
 vec3 col = vec3(0.0);
 vec2 uv = vUV.xy * 2.0 - 1.0;
 uv.x *= u_res.x/u_res.y;
-//uv *= 1.0 + sin(length(uv * 3.0) - u_time * 0.2) * sin(u_time * 0.05) * wobblitude * 0.1;
 uv *= rot(u_time);
-uv. x *= 1.0 + uv.y * wobblitude;// wobblitude;
+uv. x *= 1.0 + uv.y * wobblitude;
   
   vec3 n_transform = vec3(sin(u_time * 0.1), u_time * 1.0, 0.0) * 0.5;
   vec3 p = vec3(uv, 0.0) - n_transform * 0.1;
@@ -122,22 +122,21 @@ n *= shatter;
   
   
   vec3 fbm2 = fbm2(n+p, 0.7);
- // col += abs(fbm2.x + fbm2.z) *0.75;  //domain warp
   
 float pct = smoothstep(0.000, 0.005, n0); //pct is set here
 
-  float dw1 = abs(fbm2.x * 0.35);
-  float dw2 = abs(fbm2.z * 0.45);
+  float dw1 = abs(fbm2.x * 0.5);
+  float dw2 = abs(fbm2.z * 0.5);
   
-  col += mix(dw1, dw2, pct);
+  val += mix(dw1, dw2, pct);
   
   
-col *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
+val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
 
   
   
   vec2 p1 = fract(p.xy * 0.5 - fbm2.xy * 0.01) - 0.5;
-  vec2 p2 = fract(p.xy * n0 - fbm2.xz * 0.0055) - 0.5;
+  vec2 p2 = fract((p.xy + 0.5) * n0 - fbm2.xz * 0.0055) - 0.5;
 
 
   
@@ -146,37 +145,38 @@ col *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
  float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress));
   
   vec2 uv2 = (uv - 0.4 - n.xy - fbm2.xy*0.0075) * rot(-5. + u_time);
-  float l3 = 0.01 / (abs(uv2.x));
+  float l3 = 0.005 / (abs(uv2.x));
 
     
 
-col += min(1.0, (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5));
- col += l3;
+val += min(1.0, (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5));
+val += l3;
   
   
   
   
-  col = mix(col, -col + 1.0, pct);
+  val = mix(val, -val + 1.0, pct);
 
   float vig = clamp(-abs(vUV.y * -0.5)+1.0, 0.05, 1.0); // vignette
  // col *= smoothstep(0.0, 1.0, u_poetry_progress.x*5.0)*0.8 + 0.2; // beginning fade
     
 
-  col *= vig;
+  val *= vig;
 
-  col = clamp(col , 0.075, 0.9) * 0.9;
-  col += (hash12(vUV)-0.5)*0.15;
+  val = clamp(val , 0.075, 0.9) * 0.9;
+  val += (hash12(vUV)-0.5)*0.2;
 
 
-
-  
 
   
-col = mix(vec3(0.0, 0.15, 0.30), vec3(1.2, 1.0, 0.9), col.r);
+
+  
+col = mix(vec3(0.0, 0.15, 0.30), vec3(1.2, 1.0, 0.9), val);
   
   col *= vig; 
  
  //col = vec3(vig);
+  //col = hash33(vec3(vUV, u_time));
   
- fragColor = vec4(col, 1.0-hash12(vUV.xy)*0.1);
+ fragColor = vec4(col, 1.0);
 }
