@@ -1,5 +1,5 @@
 #version 300 es
-precision mediump float;
+precision highp float;
 
 uniform vec2 u_res;
 uniform float u_time, u_poetry_progress;
@@ -82,7 +82,7 @@ vec3 fbm2(vec3 x, float H )
         f *= 2.0;
         a *= G;
       t.xz = t.yx;
-       x += t * 1.;
+       x += t * 0.9;
     }
   
     return t * abs(t);
@@ -103,66 +103,59 @@ uv.x *= u_res.x/u_res.y;
 uv *= rot(u_time * 0.5);
 uv. x *= 1.0 + uv.y * wobblitude;
   
-  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.5;
+  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 1.0, 0.0) * 0.5;
   vec3 p = vec3(uv * (2.0 + sin(u_time * 0.05)) * 0.5, 0.0) - n_transform * 0.1;
   
   
   
-vec3 n = fbm(p * 1.2, 2.0) * 1.0;
- float n0 = n.z;
-n *= shatter;
-//vec3 col_noise = fbm2(n + p, 1.0);
+  vec3 n = fbm(p * 1.2, 2.0) * 1.0;
+  float n0 = n.z;
+  n *= shatter;
+    
+  //p *= 1.0 + sin(u_time * 0.05) *0.1;
   
-  p *= 1.0 + sin(u_time * 0.05) *0.1;
+  //creating the noise and storing it in val
+  vec3 fbm2 = fbm2(n+p, 0.72);
   
-  
-  vec3 fbm2 = fbm2(n+p, 0.7);
-  
-float pct = smoothstep(0.000, 0.001, n0); //pct is set here
+  float pct = smoothstep(0.000, 0.001, n0); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
-  float dw2 = abs(fbm2.z * 0.75);
-  
+  float dw2 = abs(-fbm2.z * 0.75);
   val += mix(dw1, dw2, pct);
   
+  //fading in the dw noise
+  float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - fbm2.z*0.1 - n0 * 0.5, 0.0, 1.0);
+  val *= fade_in;
   
-val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
-
-  
-  
+  //positions for circles
   vec2 p1 = fract(p.xy * 0.5 - fbm2.xy * 0.01) - 0.5;
   vec2 p2 = fract((p.xy + 0.5) * n0 - fbm2.xz * 0.0055) - 0.5;
 
-
-  
-  
+  //adding circles
   float l = 0.01 / abs(length(p1.xy  - n.xz)-0.25);
-  float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress));
+  float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
-  vec2 uv2 = (uv - 0.4 - n.xy - fbm2.xy*0.0075) * rot(-5. + u_time);
-  float l3 = 0.005 / (abs(uv2.x));
+  //adding  lines
+  vec2 uv2 = (uv - 0.4 - n.xy - fbm2.xy*0.0075) * rot(-5. - u_time);
+  float l3 = (0.005 / abs(uv2.x)) + (0.005 / abs(uv2.y + 1.2));
 
+  val += (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
+  val = max(val, min(1.0, l3)); // adding line
     
-
-  val += (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5);
-  val += l3;
-  
+  //invert in grids
   val = mix(val, -val + 1.0, pct);
-
+  
+  //vignette
   float vig = clamp(-abs(vUV.y * -0.5)+1.0, 0.05, 1.0); // vignette
-
-    
-
   val *= vig;
- val += (hash12(vUV)-0.5)*0.25;
+  
+  //adding hash noise
+  val += (hash12(vUV)-0.5)*0.25;
 
+  //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
- 
- //col = vec3(vig);
-//col = vec3(hash33(vec3(vUV, u_time)));
-  
+
  fragColor = vec4(col, 1.0);
 }
