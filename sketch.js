@@ -35,6 +35,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
+  frameRate(30);
   shader(shader_file);
 
   // Process the data into a nicer format
