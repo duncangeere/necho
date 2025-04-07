@@ -9,7 +9,7 @@ body, html {
 
 #textDiv {
     position: absolute;
-    top: 20%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(20, 20, 20, 0.0); /* Semi-transparent background */
@@ -48,11 +48,12 @@ display: block;
 
 /* Splash screen content */
 #splashContent {
-  text-align: center;
   padding: 20px;
   background-color: #222; /* Dark background for the content */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 75%; /* Default width is 75% of the screen */
+  max-width: 600px; /* Limit the maximum width to 600px */
 }
 
 #splashButton {
@@ -60,12 +61,13 @@ display: block;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  background-color: #007bff;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
   border-radius: 5px;
 }
 
 #splashButton:hover {
-  background-color: #0056b3;
+  background-color: black;
+  color: white; 
 }
