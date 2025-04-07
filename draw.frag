@@ -126,7 +126,7 @@ float pct = smoothstep(0.000, 0.005, n0); //pct is set here
   val += mix(dw1, dw2, pct);
   
   
-//val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
+val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
 
   
   
