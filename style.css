@@ -32,6 +32,10 @@ canvas {
 display: block;
 }
 
+a {
+    color: white;
+}
+
 /* Splash screen container */
 #splashScreen {
   position: fixed;
