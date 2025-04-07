@@ -64,7 +64,6 @@ a {
 #splashButton {
   margin-top: 20px;
   padding: 10px 20px;
-  font-size: 16px;
   cursor: pointer;
   background-color: white;
   color: black;
@@ -79,6 +78,6 @@ a {
 
 @media (max-width: 600px) {
   body, html {
-    font-size: 24px; /* Increase font size for smaller screens */
+    font-size: 28px; /* Further increase font size for better readability */
   }
 }
