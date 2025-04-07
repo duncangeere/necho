@@ -2,6 +2,9 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: 'Vollkorn-Italic', serif;
+    font-size: 20px;
+    text-align: center;
   }
 
 #textDiv {
@@ -13,9 +16,6 @@ body, html {
     padding: 10px;
     border-radius: 0px;
     z-index: 20;
-    font-family: 'Vollkorn-Italic', serif;
-    font-size: 20px;
-    text-align: center;
     mix-blend-mode: luminosity;
     letter-spacing: 0.1em;
     color: rgba(255, 240, 230, 1.0);
