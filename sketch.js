@@ -6,7 +6,7 @@ let dataURL =
 let rawData, data, currentNode, textbox;
 
 // Track the current location in the network
-let state = "01text_1";
+let state = "preload";
 
 // Shader variables
 let poetry_progression = 0.0;
