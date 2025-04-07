@@ -19,8 +19,8 @@ body, html {
     mix-blend-mode: luminosity;
     letter-spacing: 0.1em;
     color: rgba(255, 240, 230, 1.0);
-    max-width: 600px;
-    width: 75%;
+max-width: 600px;
+    width: 75%;  
   }
 
 .escapable {
@@ -75,4 +75,10 @@ a {
 #splashButton:hover {
   background-color: black;
   color: white; 
+}
+
+@media (max-width: 600px) {
+  body, html {
+    font-size: 24px; /* Increase font size for smaller screens */
+  }
 }
