@@ -109,7 +109,7 @@ function keyPressed() {
 function mouseClicked() {
   if (
     currentNode.escape &&
-    distance(mouseX, mouseY, windowWidth / 2, (3 * windowHeight) / 4) <
+    distance(mouseX, mouseY, windowWidth*0.5, windowHeight*0.75) <
       windowWidth / 20
   ) {
     changeState(currentNode.escape);
@@ -119,7 +119,7 @@ function mouseClicked() {
 }
 
 function touchEnded() {
-  if (currentNode.escape && mouseY > (4 * windowHeight) / 5) {
+  if (currentNode.escape && mouseY > windowHeight*0.8) {
     changeState(currentNode.escape);
   } else {
     changeState(currentNode.next);
