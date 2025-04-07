@@ -59,17 +59,16 @@ vec3 noise2( in vec3 x )
 
 vec3 fbm(vec3 x, float H )
 {    
-   x.z += 55.0;
     float G = exp2(-H);
     float f = 1.0;
     float a = 1.0;
     vec3 t = vec3(0.0);
     for( int i=0; i<6; i++ )
     {
-        t += a*noise(f*x);
+        t += a*noise(f*x + float(i * i));
         f *= 2.0;
         a *= G;
-      t.xz *= rot(u_time * -1.5);
+      t.xz *= rot(u_time * -1.);
        x += t.xyz * 0.5;
     }
     return t;
@@ -81,13 +80,13 @@ vec3 fbm2(vec3 x, float H )
     float f = 1.0;
     float a = 1.0;
     vec3 t = vec3(0.0);
-    for( int i=0; i<7; i++ )
+    for( int i=0; i<6; i++ )
     {
         t += a*noise2(f*x);
         f *= 2.0;
         a *= G;
       t.xz *= rot(90.0);
-       x += t * 0.5;
+       x += t * 1.;
     }
   
     return t * abs(t);
@@ -141,42 +140,33 @@ val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
 
   
   
- float l = 0.01 / abs(length(p1.xy  - n.xz)-0.25);
- float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress));
+  float l = 0.01 / abs(length(p1.xy  - n.xz)-0.25);
+  float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress));
   
   vec2 uv2 = (uv - 0.4 - n.xy - fbm2.xy*0.0075) * rot(-5. + u_time);
   float l3 = 0.005 / (abs(uv2.x));
 
     
 
-val += min(1.0, (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5));
-val += l3;
-  
-  
-  
+  val += (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5);
+  val += l3;
   
   val = mix(val, -val + 1.0, pct);
 
   float vig = clamp(-abs(vUV.y * -0.5)+1.0, 0.05, 1.0); // vignette
- // col *= smoothstep(0.0, 1.0, u_poetry_progress.x*5.0)*0.8 + 0.2; // beginning fade
+
     
 
   val *= vig;
+ val += (hash12(vUV)-0.5)*0.15;
 
   val = clamp(val , 0.075, 0.9) * 0.9;
-  val += (hash12(vUV)-0.5)*0.2;
 
-
-
-  
-
-  
-col = mix(vec3(0.0, 0.15, 0.30), vec3(1.2, 1.0, 0.9), val);
-  
+  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.2, 1.0, 0.9), val);
   col *= vig; 
  
  //col = vec3(vig);
-  //col = hash33(vec3(vUV, u_time));
+ // col = vec3(hash12(vUV));
   
  fragColor = vec4(col, 1.0);
 }
