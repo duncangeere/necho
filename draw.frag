@@ -64,7 +64,7 @@ vec3 fbm(vec3 x, float H )
         t += a*noise(f*x + float(i * i));
         f *= 2.0;
         a *= G;
-      t.xz *= rot(u_time * -1.);
+      t.xz *= rot(u_time * -0.75);
        x += t.zxy * 0.4;
     }
     return t;
@@ -101,14 +101,14 @@ vec3 col = vec3(0.0);
 vec2 uv = vUV.xy * 2.0 - 1.0;
 uv.x *= u_res.x/u_res.y;
 uv *= rot(u_time * 0.5);
-uv. x *= 1.0 + uv.y * wobblitude;
+uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   
-  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 1.0, 0.0) * 0.5;
-  vec3 p = vec3(uv * (2.0 + sin(u_time * 0.05)) * 0.5, 0.0) - n_transform * 0.1;
+  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.5;
+  vec3 p = vec3(uv * (2.0 + sin(u_time * 0.025 + PI)) * 0.5, -2.0) - n_transform * 0.1;
   
   
   
-  vec3 n = fbm(p * 1.2, 2.0) * 1.0;
+  vec3 n = fbm(p * 1.2 - n_transform * 0.05, 2.1) * 1.0;
   float n0 = n.z;
   n *= shatter;
     
@@ -117,7 +117,7 @@ uv. x *= 1.0 + uv.y * wobblitude;
   //creating the noise and storing it in val
   vec3 fbm2 = fbm2(n+p, 0.72);
   
-  float pct = smoothstep(0.000, 0.001, n0); //pct is set here
+  float pct = smoothstep(0.001, 0.000, n0); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
@@ -128,19 +128,21 @@ uv. x *= 1.0 + uv.y * wobblitude;
   val *= fade_in;
   
   //positions for circles
-  vec2 p1 = fract(p.xy * 0.5 - fbm2.xy * 0.01) - 0.5;
+ // vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
   vec2 p2 = fract((p.xy + 0.5) * n0 - fbm2.xz * 0.0055) - 0.5;
 
-  //adding circles
-  float l = 0.01 / abs(length(p1.xy  - n.xz)-0.25);
-  float l2 = 0.005 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
-  
-  //adding  lines
-  vec2 uv2 = (uv - 0.4 - n.xy - fbm2.xy*0.0075) * rot(-5. - u_time);
+    //adding  lines
+  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.02) * rot(-5. - u_time);
   float l3 = (0.005 / abs(uv2.x)) + (0.005 / abs(uv2.y + 1.2));
+  
+  //adding circles
+  float l1 = 0.01 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
+  float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
+  
 
-  val += (l + l2) * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
-  val = max(val, min(1.0, l3)); // adding line
+
+  val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
+  val = max(val, min(0.9, l3 + l1)); // adding line
     
   //invert in grids
   val = mix(val, -val + 1.0, pct);
@@ -150,10 +152,11 @@ uv. x *= 1.0 + uv.y * wobblitude;
   val *= vig;
   
   //adding hash noise
-  val += (hash12(vUV)-0.5)*0.25;
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
+  val += (hash12(vUV)-0.5)*0.2;
+
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
 
