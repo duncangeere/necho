@@ -30,3 +30,42 @@ box-shadow: 0 0 30px 10px rgba(255,255,255, 0.7);
 canvas {
 display: block;
 }
+
+/* Splash screen container */
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above everything else */
+}
+
+/* Splash screen content */
+#splashContent {
+  text-align: center;
+  padding: 20px;
+  background-color: #222; /* Dark background for the content */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#splashButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+#splashButton:hover {
+  background-color: #0056b3;
+}

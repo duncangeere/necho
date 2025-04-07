@@ -20,6 +20,11 @@ let isTransitioning = false; // Prevents state change during fade
 let opacity = 0; // Controls text opacity
 let fadeState = "in"; // Tracks if text is fading in or out
 
+// Hide the splash screen when the "Okay" button is clicked
+document.getElementById("splashButton").addEventListener("click", function () {
+    document.getElementById("splashScreen").style.display = "none";
+  });
+
 // Before doing anything else
 function preload() {
   // Load the data
