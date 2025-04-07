@@ -76,7 +76,7 @@ vec3 fbm2(vec3 x, float H )
     float f = 1.0;
     float a = 1.0;
     vec3 t = vec3(0.0);
-    for( int i=0; i<5; i++ )
+    for( int i=0; i<6; i++ )
     {
         t += a*noise2(f*x);
         f *= 2.0;
@@ -104,7 +104,7 @@ uv *= rot(u_time * 0.5);
 uv. x *= 1.0 + uv.y * wobblitude;
   
   vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.5;
-  vec3 p = vec3(uv, 0.0) - n_transform * 0.1;
+  vec3 p = vec3(uv * (2.0 + sin(u_time * 0.05)) * 0.5, 0.0) - n_transform * 0.1;
   
   
   
@@ -154,11 +154,11 @@ val *= 1.0 * clamp(u_poetry_progress * 1.5 - 0.5, 0.0, 1.0); //fade in
     
 
   val *= vig;
- val += (hash12(vUV)-0.5)*0.2;
+ val += (hash12(vUV)-0.5)*0.25;
 
-  val = clamp(val , 0.075, 0.9) * 0.9;
+  val = clamp(val , 0.0, 1.0) * 0.9;
 
-  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.2, 1.0, 0.9), val);
+  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
  
  //col = vec3(vig);
