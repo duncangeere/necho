@@ -3,9 +3,14 @@ body, html {
     padding: 0;
     overflow: hidden;
     font-family: 'Vollkorn Medium', serif;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
   }
+
+button {
+  font-family: 'Vollkorn Medium', serif;
+  font-size: 24px;
+}
 
 #textDiv {
     position: absolute;
