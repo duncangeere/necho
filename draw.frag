@@ -112,7 +112,7 @@ float eval(float x, float y, float z) {
         float d = fastdist(vec3(x, y, z), p[i].xyz);
         if(d < m) { m = d; w = p[i].w; }
     }
-    return m * m * 2.0;
+    return m * m;
 }
 
 
@@ -121,37 +121,40 @@ float eval(float x, float y, float z) {
 out vec4 fragColor;
 void main(){
   
-  float wobblitude = cos(u_poetry_progress * 0.5 + PI) *0.5 + 0.5;
-  float shatter = cos(u_poetry_progress * 0.2 + PI) * 0.5 + 0.5;
+  float wobblitude = cos(u_poetry_progress * 0.75 + PI) *0.5 + 0.5;
+  float shatter = cos(u_poetry_progress * 0.25 + PI) * 0.5 + 0.5;
 
 float val = 0.0;
 vec3 col = vec3(0.0);
 vec2 uv = vUV.xy * 2.0 - 1.0;
 uv.x *= u_res.x/u_res.y;
-
-uv *= rot(-u_time * 0.5 + 180.0);
 uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
 
+uv *= rot(-u_time * 0.5 + 180.0);
+
   
-  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.5;
+  vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.55;
   vec3 p = vec3(uv * (2.0 + sin(u_time * 0.025 + PI)) * 0.5, -2.0) - n_transform * 0.1;
   
   
   
-  vec3 n = fbm(p * 1.2 - n_transform * 0.05, 2.1) * 1.0;
+  vec3 n = fbm(p * 1. - n_transform * 0.05, 2.1) * 1.0;
   float n0 = n.z;
   n *= shatter;
     
   
   //creating the noise and storing it in val
   vec3 fbm2 = fbm2(p + n, 0.7);
-  float vor = eval(p.x * 4.0 + fbm2.x * 0.75 + n.x, p.y * 4.0 + fbm2.y * 0.75 + n.y, p.z + u_time * 0.2);
+  float vor = eval(p.x * 4.0 + fbm2.x * 0.85 + n.x, p.y * 4.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.2);
+  vor *= 1.5;
   
-  float pct = smoothstep(0.001, 0.000, n0 + hash12(vUV.xy)*2.0/u_res.y); //pct is set here
+  //val += eval(p.x * n0, p.y * n0, p.z );
+  
+  float pct = smoothstep(0.000, 0.001, n0); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
-  val += mix(dw1, dw2, pct);
+  val += mix(dw1, -dw2+1.0, pct);
   
   //fading in the dw noise
  float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 0.5, 0.0, 1.0);
@@ -165,11 +168,12 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.0055) - 0.5;
 
     //adding  lines
-  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.02) * rot(-5. - u_time);
+  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.015);
   float l3 = (0.005 / abs(uv2.x)) + (0.005 / abs(uv2.y + 1.2));
   
   //adding circles
-  float l1 = 0.01 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
+  uv2 *= rot(u_time);
+  float l1 = 0.005 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
   //float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
 
@@ -179,6 +183,7 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
     
   vor = mix(vor, -vor *0.5, pct);
   val += vor * fade_in;
+  val = mix(val, val - 0.2, n.y);
 
   //invert in grids
   //vignette
@@ -191,7 +196,7 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-  val += (hash12(vUV)-0.5)*0.2;
+  val += (hash12(vUV)-0.5)*0.1;
 
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
