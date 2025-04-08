@@ -3,13 +3,13 @@ body, html {
     padding: 0;
     overflow: hidden;
     font-family: 'Vollkorn Medium', serif;
-    font-size: 24px;
+    font-size: 22px;
     text-align: center;
   }
 
 button {
   font-family: 'Vollkorn Medium', serif;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 #textDiv {
@@ -28,9 +28,24 @@ max-width: 600px;
     width: 75%;  
   }
 
+  /*
 .escapable {
 border: 4px solid black;
 box-shadow: 0 0 30px 10px rgba(0,0,0, 0.7);
+}
+*/
+
+.tilt-l {
+  transform: rotate(-2deg);
+}
+.tilt-r {
+  transform: rotate(2deg);
+}
+.tilt-l2x {
+  transform: rotate(-5deg);
+}
+.tilt-r2x {
+  transform: rotate(5deg);
 }
 
 canvas {
@@ -83,6 +98,9 @@ a {
 
 @media (max-width: 600px) {
   body, html {
+    font-size: 28px; /* Further increase font size for better readability */
+  }
+  button {
     font-size: 28px; /* Further increase font size for better readability */
   }
 }
