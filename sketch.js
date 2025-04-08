@@ -49,10 +49,10 @@ function setup() {
 
 function draw() {
   // Simon bits
-  shader_file.setUniform("u_res", [windowWidthwidth, windowHeight]);
+  shader_file.setUniform("u_res", [windowWidth, windowHeight]);
   shader_file.setUniform("u_time", millis() / 1000.0);
   shader_file.setUniform("u_poetry_progress", poetry_progression);
-  rect(0, 0, windowWidthwidth, windowHeightheight);
+  rect(0, 0, windowWidth, windowHeight);
 
   // Lerp progression values to target values over the same duration as the fade
   let lerpAmt = 1.0 - pow(1.0 - 1.0 / fadeDuration / 2, deltaTime);
