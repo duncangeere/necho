@@ -14,7 +14,7 @@ button {
 
 #textDiv {
     position: absolute;
-    top: 50%;
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(20, 20, 20, 0.0); /* Semi-transparent background */
