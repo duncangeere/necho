@@ -16,13 +16,15 @@ let increment = 0.1;
 // Fade transition variables
 let fadeDuration = 500; // Duration in milliseconds
 let fadeStartTime = 0;
-let isTransitioning = false; // Prevents state change during fade
+let isTransitioning = true; // Prevents state change during fade
 let opacity = 0; // Controls text opacity
 let fadeState = "in"; // Tracks if text is fading in or out
 
 // Hide the splash screen when the "Okay" button is clicked
 document.getElementById("splashButton").addEventListener("click", function () {
     document.getElementById("splashScreen").style.display = "none";
+    isTransitioning = false;
+    changeState(currentNode.next);
   });
 
 // Before doing anything else
@@ -52,6 +54,7 @@ function draw() {
   shader_file.setUniform("u_res", [windowWidth, windowHeight]);
   shader_file.setUniform("u_time", millis() / 1000.0);
   shader_file.setUniform("u_poetry_progress", poetry_progression);
+  resizeCanvas(windowWidth, windowHeight);
   rect(0, 0, windowWidth, windowHeight);
 
   // Lerp progression values to target values over the same duration as the fade
