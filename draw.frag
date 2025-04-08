@@ -64,7 +64,7 @@ vec3 fbm(vec3 x, float H )
         t += a*noise(f*x + float(i * i));
         f *= 2.0;
         a *= G;
-      t.xz *= rot(u_time * -0.75);
+      t.xz *= rot(u_time * -1.0);
        x += t.zxy * 0.4;
     }
     return t;
@@ -88,6 +88,34 @@ vec3 fbm2(vec3 x, float H )
     return t * abs(t);
 }
 
+vec2 rand2( vec2 p)	{
+	return fract(vec2(sin(p.x * 591.32 + p.y * 154.077), cos(p.x * 391.32 + p.y * 49.077)));
+}
+float hash(float x) { return fract(x + 1.3215 * 1.8152); }
+
+float hash3(vec3 a) { return fract((hash(a.z * 42.8883) + hash(a.y * 36.9125) + hash(a.x * 65.4321)) * 291.1257); }
+
+vec3 rehash3(float x) { return vec3(hash(((x + 0.5283) * 59.3829) * 274.3487), hash(((x + 0.8192) * 83.6621) * 345.3871), hash(((x + 0.2157f) * 36.6521f) * 458.3971f)); }
+
+float sqr(float x) {return x*x;}
+float fastdist(vec3 a, vec3 b) { return sqr(b.x - a.x) + sqr(b.y - a.y) + sqr(b.z - a.z); }
+
+float eval(float x, float y, float z) {
+    vec4 p[27];
+    for (int _x = -1; _x < 2; _x++) for (int _y = -1; _y < 2; _y++) for(int _z = -1; _z < 2; _z++) {
+        vec3 _p = vec3(floor(x), floor(y), floor(z)) + vec3(_x, _y, _z);
+        float h = hash3(_p);
+        p[(_x + 1) + ((_y + 1) * 3) + ((_z + 1) * 3 * 3)] = vec4((rehash3(h) + _p).xyz, h);
+    }
+    float m = 9999.9999, w = 0.0;
+    for (int i = 0; i < 27; i++) {
+        float d = fastdist(vec3(x, y, z), p[i].xyz);
+        if(d < m) { m = d; w = p[i].w; }
+    }
+    return m * m * 2.0;
+}
+
+
 
 
 out vec4 fragColor;
@@ -100,8 +128,10 @@ float val = 0.0;
 vec3 col = vec3(0.0);
 vec2 uv = vUV.xy * 2.0 - 1.0;
 uv.x *= u_res.x/u_res.y;
-uv *= rot(u_time * 0.5);
+
+uv *= rot(-u_time * 0.5 + 180.0);
 uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
+
   
   vec3 n_transform = vec3(sin(u_time * 0.05), u_time * 0.5, 0.0) * 0.5;
   vec3 p = vec3(uv * (2.0 + sin(u_time * 0.025 + PI)) * 0.5, -2.0) - n_transform * 0.1;
@@ -112,24 +142,27 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   float n0 = n.z;
   n *= shatter;
     
-  //p *= 1.0 + sin(u_time * 0.05) *0.1;
   
   //creating the noise and storing it in val
-  vec3 fbm2 = fbm2(n+p, 0.72);
+  vec3 fbm2 = fbm2(p + n, 0.7);
+  float vor = eval(p.x * 4.0 + fbm2.x * 0.75 + n.x, p.y * 4.0 + fbm2.y * 0.75 + n.y, p.z + u_time * 0.2);
   
-  float pct = smoothstep(0.001, 0.000, n0); //pct is set here
+  float pct = smoothstep(0.001, 0.000, n0 + hash12(vUV.xy)*2.0/u_res.y); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
   val += mix(dw1, dw2, pct);
   
   //fading in the dw noise
-  float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - fbm2.z*0.1 - n0 * 0.5, 0.0, 1.0);
-  val *= fade_in;
+ float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 0.5, 0.0, 1.0);
+  
+//  fade_in = 1.0;
+  
+ val *= fade_in;
   
   //positions for circles
  // vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
-  vec2 p2 = fract((p.xy + 0.5) * n0 - fbm2.xz * 0.0055) - 0.5;
+  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.0055) - 0.5;
 
     //adding  lines
   vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.02) * rot(-5. - u_time);
@@ -137,19 +170,22 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   
   //adding circles
   float l1 = 0.01 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
-  float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
+  //float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
 
 
-  val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
+ //val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
   val = max(val, min(0.9, l3 + l1)); // adding line
     
+  vor = mix(vor, -vor *0.5, pct);
+  val += vor * fade_in;
+
   //invert in grids
-  val = mix(val, -val + 1.0, pct);
-  
   //vignette
-  float vig = clamp(-abs(vUV.y * -0.5)+1.0, 0.05, 1.0); // vignette
-  val *= vig;
+  val = -val+1.0;
+  float vig = clamp(abs(vUV.y * -0.5)+0.6, 0.05, 1.0); // vignette
+ // vig = -vig+1.0;
+  val *= vig * 0.8;
   
   //adding hash noise
 
@@ -159,6 +195,8 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
 
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
+  
+  //col = vec3(vig);
 
  fragColor = vec4(col, 1.0);
 }
