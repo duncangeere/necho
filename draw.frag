@@ -147,14 +147,17 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   vec3 fbm2 = fbm2(p + n, 0.7);
   float vor = eval(p.x * 4.0 + fbm2.x * 0.75 + n.x, p.y * 4.0 + fbm2.y * 0.75 + n.y, p.z + u_time * 0.2);
   
-  float pct = smoothstep(0.001, 0.000, n0); //pct is set here
+  float pct = smoothstep(0.001, 0.000, n0 + hash12(vUV.xy)*2.0/u_res.y); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
   val += mix(dw1, dw2, pct);
   
   //fading in the dw noise
- float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - fbm2.z*0.1 - n0 * 0.5, 0.0, 1.0);
+ float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 0.5, 0.0, 1.0);
+  
+//  fade_in = 1.0;
+  
  val *= fade_in;
   
   //positions for circles
@@ -167,16 +170,15 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   
   //adding circles
   float l1 = 0.01 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
-  float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
+  //float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
 
 
  //val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
   val = max(val, min(0.9, l3 + l1)); // adding line
     
-  vor = mix(vor, -vor, pct);
-
-    val += vor * fade_in;
+  vor = mix(vor, -vor *0.5, pct);
+ val += vor * fade_in;
 
   //invert in grids
   //vignette
