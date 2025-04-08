@@ -129,7 +129,7 @@ vec3 col = vec3(0.0);
 vec2 uv = vUV.xy * 2.0 - 1.0;
 uv.x *= u_res.x/u_res.y;
 
-uv *= rot(-u_time * 0.5 + 90.0);
+uv *= rot(-u_time * 0.5 + 180.0);
 uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
 
   
@@ -162,7 +162,7 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   
   //positions for circles
  // vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
-  vec2 p2 = fract((p.xy + 0.5) * n0 - fbm2.xz * 0.0055) - 0.5;
+  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.0055) - 0.5;
 
     //adding  lines
   vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.02) * rot(-5. - u_time);
@@ -178,13 +178,14 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
   val = max(val, min(0.9, l3 + l1)); // adding line
     
   vor = mix(vor, -vor *0.5, pct);
- val += vor * fade_in;
+  val += vor * fade_in;
 
   //invert in grids
   //vignette
   val = -val+1.0;
-  float vig = clamp(-abs(vUV.y * -0.5)+1.0, 0.05, 1.0); // vignette
-  val *= vig;
+  float vig = clamp(abs(vUV.y * -0.5)+0.6, 0.05, 1.0); // vignette
+ // vig = -vig+1.0;
+  val *= vig * 0.8;
   
   //adding hash noise
 
@@ -194,6 +195,8 @@ uv.x *= 1.0 + max(-0.95, uv.y * wobblitude);
 
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
+  
+  //col = vec3(vig);
 
  fragColor = vec4(col, 1.0);
 }
