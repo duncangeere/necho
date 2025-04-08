@@ -64,7 +64,7 @@ vec3 fbm(vec3 x, float H )
         t += a*noise(f*x + float(i * i));
         f *= 2.0;
         a *= G;
-      t.xz *= rot(u_time * -1.0);
+      t.xz *= rot(u_time * -0.5);
        x += t.zxy * 0.4;
     }
     return t;
@@ -145,7 +145,7 @@ uv *= rot(-u_time * 0.5 + 180.0);
   
   //creating the noise and storing it in val
   vec3 fbm2 = fbm2(p + n, 0.7);
-  float vor = eval(p.x * 4.0 + fbm2.x * 0.85 + n.x, p.y * 4.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.2);
+  float vor = eval(p.x * 4.0 + fbm2.x * 0.85 + n.x, p.y * 4.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.1);
   vor *= 1.5;
   
   //val += eval(p.x * n0, p.y * n0, p.z );
@@ -164,8 +164,8 @@ uv *= rot(-u_time * 0.5 + 180.0);
  val *= fade_in;
   
   //positions for circles
- // vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
-  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.0055) - 0.5;
+  vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
+  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.005) - 0.5;
 
     //adding  lines
   vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.015);
@@ -173,17 +173,17 @@ uv *= rot(-u_time * 0.5 + 180.0);
   
   //adding circles
   uv2 *= rot(u_time);
-  float l1 = 0.005 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
-  //float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
+  float l1 = 0.0075 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
+  float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
 
 
- //val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5); //adding circles
+ val -= l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5) * 1.5; //adding circles
   val = max(val, min(0.9, l3 + l1)); // adding line
     
   vor = mix(vor, -vor *0.5, pct);
   val += vor * fade_in;
-  val = mix(val, val - 0.2, n.y);
+ // val = mix(val, val - 0.2, n.y);
 
   //invert in grids
   //vignette
@@ -196,7 +196,7 @@ uv *= rot(-u_time * 0.5 + 180.0);
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-  val += (hash12(vUV)-0.5)*0.1;
+  val += (hash12(vUV)-0.5)*0.15;
 
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
