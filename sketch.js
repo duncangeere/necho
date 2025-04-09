@@ -59,7 +59,7 @@ function draw() {
   rect(0, 0, windowWidth, windowHeight);
 
   // Lerp progression values to target values over the same duration as the fade
-  let lerpAmt = 0.05;
+  let lerpAmt = 0.02;
   poetry_progression = lerp(poetry_progression, target, lerpAmt);
 
   // Handle fade effect
