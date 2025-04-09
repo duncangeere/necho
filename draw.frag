@@ -169,11 +169,11 @@ uv *= rot(-u_time * 0.5 + 180.0);
 
     //adding  lines
   vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.005);
-  float l3 = (0.005 / abs(uv2.x)) + (0.005 / abs(uv2.y + 1.2));
+  float l3 = (0.002 / abs(uv2.x)) + (0.002 / abs(uv2.y + 1.2));
   
   //adding circles
   uv2 *= rot(u_time);
-  float l1 = 0.0075 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
+  float l1 = 0.002 / abs(length(uv2 + vec2(0.1, 1.1)  - n.xz)-0.25);
   float l2 = 0.0075 / abs(sin(length(p2.xy  - n.xz)-u_poetry_progress * 0.5));
   
 
