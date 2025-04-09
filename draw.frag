@@ -1,5 +1,5 @@
 #version 300 es
-precision highp float;
+precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time, u_poetry_progress;
