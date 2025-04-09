@@ -37,6 +37,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
+  alpha: false,
   pixelDensity(1.0);
   frameRate(30);
   shader(shader_file);
