@@ -168,7 +168,7 @@ uv *= rot(-u_time * 0.5 + 180.0);
   vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.005) - 0.5;
 
     //adding  lines
-  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.015);
+  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.005);
   float l3 = (0.005 / abs(uv2.x)) + (0.005 / abs(uv2.y + 1.2));
   
   //adding circles
