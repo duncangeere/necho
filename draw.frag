@@ -122,7 +122,7 @@ out vec4 fragColor;
 void main(){
   
   float wobblitude = cos(u_poetry_progress * 0.75 + PI) *0.5 + 0.5;
-  float shatter = cos(u_poetry_progress * 0.25 + PI) * 0.5 + 0.5;
+  float shatter = cos(u_poetry_progress * 0.15 + PI) * 0.5 + 0.5;
 
 float val = 0.0;
 vec3 col = vec3(0.0);
@@ -138,28 +138,27 @@ uv *= rot(-u_time * 0.5 + 180.0);
   
   
   
-  vec3 n = fbm(p * 1. - n_transform * 0.05, 2.1) * 1.0;
+  vec3 n = fbm(p * 1. - n_transform * 0.05, 1.0) * 1.0;
   float n0 = n.z;
   n *= shatter;
     
   
   //creating the noise and storing it in val
-  vec3 fbm2 = fbm2(p + n, 0.7);
-  float vor = eval(p.x * 4.0 + fbm2.x * 0.85 + n.x, p.y * 4.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.1);
+  vec3 fbm2 = fbm2(p + n, 0.78);
+  float vor = eval(p.x * 2.0 + fbm2.x * 0.85 + n.x, p.y * 2.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.1);
   vor *= 1.5;
   
   //val += eval(p.x * n0, p.y * n0, p.z );
   
-  float pct = smoothstep(0.000, 0.001, n0); //pct is set here
+  float pct = smoothstep(0.0, 0.001, n0); //pct is set here
 
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
   val += mix(dw1, -dw2+1.0, pct);
   
   //fading in the dw noise
- float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 0.5, 0.0, 1.0);
-  
-//  fade_in = 1.0;
+ float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 1.0, 0.0, 1.0);
+  //fade_in = 1.0;
   
  val *= fade_in;
   
@@ -183,7 +182,6 @@ uv *= rot(-u_time * 0.5 + 180.0);
     
   vor = mix(vor, -vor *0.5, pct);
   val += vor * fade_in;
- // val = mix(val, val - 0.2, n.y);
 
   //invert in grids
   //vignette
