@@ -123,9 +123,10 @@ function updateText() {
 
   // Wrap each word in a span for animation
   const words = currentNode.text.split(" ");
-  const wrappedWords = words
+  let wrappedWords = words
     .map((word, index) => `<span class="words" style="animation-delay: ${index * 0.2}s;">${word}</span>`)
     .join(" ");
+  wrappedWords="<p>" + wrappedWords + "</p>"; // Wrap the entire text in a paragraph tag  
   textbox.html(wrappedWords);
 }
 
