@@ -37,6 +37,8 @@ function preload() {
 
   // Load the shader
   shader_file = Android ? loadShader("rect.vert", "drawAndroid.frag") : loadShader("rect.vert", "draw.frag");
+
+  console.log("Loading shader: " + (Android ? "drawAndroid.frag" : "draw.frag"));
 }
 
 function setup() {
