@@ -1,4 +1,6 @@
 #version 300 es
+precision highp float;
+
 in vec3 aPosition;
 in vec2 aTexCoord;
 
