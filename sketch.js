@@ -48,6 +48,10 @@ function setup() {
   // Store the textbox in a variable
   textbox = select("#textDiv");
   updateText(); // Initialize the first text with fade-in effect
+
+  // Add event listeners for click and touchend
+  canvas.elt.addEventListener("click", handleInteraction);
+  canvas.elt.addEventListener("touchend", handleInteraction);
 }
 
 function draw() {
@@ -116,22 +120,18 @@ function keyPressed() {
   if (key === "Escape" && currentNode.escape) changeState(currentNode.escape);
 }
 
-// Functions to run when mouse is clicked or screen is touched
-function mouseClicked() {
-  if (
-    currentNode.escape &&
-    distance(mouseX, mouseY, windowWidth*0.5, windowHeight*0.75) <
-      windowWidth / 20
-  ) {
-    changeState(currentNode.escape);
-  } else {
-    changeState(currentNode.next);
-  }
-}
+// Handles click or touch interactions
+function handleInteraction(event) {
+  const mouseX = event.clientX || event.touches[0].clientX;
+  const mouseY = event.clientY || event.touches[0].clientY;
 
-function touchEnded() {
-  if (currentNode.escape && mouseY > windowHeight*0.8) {
-    changeState(currentNode.escape);
+  if (mouseX > textbox.elt.offsetLeft && mouseX < textbox.elt.offsetLeft + textbox.elt.offsetWidth &&
+      mouseY > textbox.elt.offsetTop && mouseY < textbox.elt.offsetTop + textbox.elt.offsetHeight) {
+    if (currentNode.escape) {
+      changeState(currentNode.escape);
+    } else {
+      changeState(currentNode.next);
+    }
   } else {
     changeState(currentNode.next);
   }

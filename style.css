@@ -28,12 +28,18 @@ max-width: 600px;
     width: 75%;  
   }
 
-  /*
+#textDiv p {
+    pointer-events: none; 
+  }
+
+
 .escapable {
-border: 4px solid black;
-box-shadow: 0 0 30px 10px rgba(0,0,0, 0.7);
+  /*
+  border: 4px solid black;
+  box-shadow: 0 0 30px 10px rgba(0,0,0, 0.7);
+  */
 }
-*/
+
 
 .tilt-l {
   transform: rotate(-2deg);
