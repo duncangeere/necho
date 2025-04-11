@@ -36,11 +36,13 @@ max-width: 600px;
   }
 
 .words {
-    pointer-events: none; 
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    user-select: none;          /* Likely future */   
+    pointer-events: none;
+    /*
+    -webkit-user-select: none;
+    -moz-user-select: none;     
+    -ms-user-select: none;      
+    user-select: none;          
+    */
     font-size: 22px;
     text-shadow: 0 0 6px rgba(0,0,0, 0.5);
   }

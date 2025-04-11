@@ -31,8 +31,12 @@ document.getElementById("splashButton").addEventListener("click", function () {
 function preload() {
   // Load the data
   rawData = loadTable(dataURL, "csv", "header");
+
+  // Check for Android devices
+  let Android = /(android)/i.test(navigator.userAgent);
+
   // Load the shader
-  shader_file = loadShader("rect.vert", "draw.frag");
+  shader_file = Android ? loadShader("rect.vert", "drawAndroid.frag") : loadShader("rect.vert", "draw.frag");
 }
 
 function setup() {
