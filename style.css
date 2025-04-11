@@ -17,7 +17,7 @@ button {
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #00264C; /* Semi-transparent background */
+    background: none;
     padding: 10px;
     border-radius: 0px;
     z-index: 20;
