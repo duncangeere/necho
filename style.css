@@ -107,7 +107,7 @@ a {
     transform: translateY(0); /* No movement at start and end */
   }
   50% {
-    transform: translateY(-30px); /* Subtle upward movement */
+    transform: translateY(30px); /* Subtle upward movement */
   }
 }
 
