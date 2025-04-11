@@ -170,9 +170,9 @@ uv *= rot(-u_time * 0.5 + 180.0);
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-  val += (hash12(vUV)-0.5)*0.12;
+  val += (hash12(vUV)-0.5)*0.2;
 
-  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
+  col = mix(vec3(0.0, 0.2, 0.40), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
   
   //col = vec3(vig);
