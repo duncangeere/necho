@@ -3,7 +3,7 @@ let dataURL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5eE7SMg4Na3jnmM69lRacKetRSzB50rfYA5wshVIEWHBVAYzjkXpzSdCuNKbfB2lqda1HINcaPpGZ/pub?gid=0&single=true&output=csv";
 
 // Empty variables to hold the data
-let rawData, data, currentNode, textbox;
+let rawData, data, currentNode, textbox, canvas;
 
 // Track the current location in the network
 let state = "preload";
@@ -36,7 +36,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  // Assign the canvas to a variable
+  canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   alpha: false,
   pixelDensity(1.0);
   frameRate(30);
