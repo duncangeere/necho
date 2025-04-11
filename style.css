@@ -2,13 +2,13 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: 'Vollkorn Medium', serif;
-    font-size: 22px;
+    font-family: 'Vollkorn-Medium', serif;
+    font-size: 18px;
     text-align: center;
   }
 
 button {
-  font-family: 'Vollkorn Medium', serif;
+  font-family: 'Vollkorn-Medium', serif;
   font-size: 22px;
 }
 
@@ -28,8 +28,11 @@ max-width: 600px;
     width: 75%;  
   }
 
-#textDiv p {
+.words {
     pointer-events: none; 
+    user-select: none;
+    font-size: 22px;
+    text-shadow: 0 0 6px rgba(0,0,0, 0.5);
   }
 
 canvas {
@@ -57,8 +60,8 @@ a {
 
 /* Splash screen content */
 #splashContent {
-  padding: 20px;
-  background-color: #00264C; /* Dark background for the content */
+  padding: 30px;
+  background-color: rgba(0, 38, 76, 0.8); /* Dark background with 90% opacity */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   width: 75%; /* Default width is 75% of the screen */
@@ -70,19 +73,21 @@ a {
   padding: 10px 20px;
   cursor: pointer;
   background-color: #FFFFE6; /* Light background for the button */
-  color: #00264C;
+  color: rgba(0, 38, 76);
   border: none;
   border-radius: 5px;
 }
 
 #splashButton:hover {
-  background-color: #00264C;
+  background-color: rgba(0, 38, 76, 0.8); /* Darker background on hover */
+  box-shadow:inset 0px 0px 0px 1px #ffffe6;
   color: #FFFFE6; 
 }
 
-.escapable .nodeText {
+.escapable .words {
   display: inline-block; /* Ensure the text remains inline */
   animation: subtleWave 6s infinite ease-in-out;
+  text-shadow: 0 0 6px rgba(0,0,0, 0.5);
 }
 
 @keyframes subtleWave {
@@ -90,7 +95,7 @@ a {
     transform: translateY(0); /* No movement at start and end */
   }
   50% {
-    transform: translateY(-20px); /* Subtle upward movement */
+    transform: translateY(-30px); /* Subtle upward movement */
   }
 }
 

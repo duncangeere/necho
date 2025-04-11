@@ -115,9 +115,12 @@ function updateText() {
   fadeStartTime = millis();
   opacity = 0;
 
-  // Wrap the text in a child span for animation
-  const wrappedText = `<span class="nodeText">${currentNode.text}</span>`;
-  textbox.html(wrappedText);
+  // Wrap each word in a span for animation
+  const words = currentNode.text.split(" ");
+  const wrappedWords = words
+    .map((word, index) => `<span class="words" style="animation-delay: ${index * 0.2}s;">${word}</span>`)
+    .join(" ");
+  textbox.html(wrappedWords);
 }
 
 // Handles state change with fade-out and fade-in transition
