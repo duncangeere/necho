@@ -82,7 +82,7 @@ vec3 fbm2(vec3 x, float H )
         f *= 2.0;
         a *= G;
       t.xyz = t.yzx;
-       x += t * 1.0;
+       x += t * 0.9;
     }
   
     return t;
@@ -130,8 +130,8 @@ uv *= rot(-u_time * 0.5 + 180.0);
   float dw2 = abs(-fbm2.z * 0.75);
  // val += mix(dw1, -dw2+1.0, pct);
   */
-  float time = u_time * 0.3;
-  vec3 light_p = vec3(cos(time) * 3.0,sin(time * 0.25) * 1.0 - 1.0, 1.0);
+  float time = u_time * 0.1;
+  vec3 light_p = vec3(cos(time + u_poetry_progress*10.0) * 3.0,sin(time * 0.25 +  u_poetry_progress*3.0) * 2.0 - 1.0, 1.0);
   float dp = dot(normalize(vec3(uv, 0.0) - light_p), fbm2);
   val += dp * 1.0 + 0.0;
   
@@ -170,9 +170,9 @@ uv *= rot(-u_time * 0.5 + 180.0);
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-  val += (hash12(vUV)-0.5)*0.15;
+  val += (hash12(vUV)-0.5)*0.2;
 
-  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
+  col = mix(vec3(0.0, 0.2, 0.40), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
   
   //col = vec3(vig);
