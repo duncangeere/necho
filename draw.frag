@@ -1,5 +1,5 @@
 #version 300 es
-precision mediump float;
+precision highp float;
 
 uniform vec2 u_res;
 uniform float u_time, u_poetry_progress;
@@ -118,35 +118,29 @@ uv *= rot(-u_time * 0.5 + 180.0);
     
   
   //creating the noise and storing it in val
-  vec3 fbm2 = fbm2(p * 1.5 + n, 0.78);
+  vec3 v_fbm2 = fbm2(p * 1.5 + n, 0.78);
 
-  fbm2 = normalize(fbm2);
+  v_fbm2 = normalize(v_fbm2);
 
-  //val += eval(p.x * n0, p.y * n0, p.z );
   
   float pct = smoothstep(0.0, 0.001, n0); //pct is set here
-/*
-  float dw1 = abs(fbm2.x * 0.75);
-  float dw2 = abs(-fbm2.z * 0.75);
- // val += mix(dw1, -dw2+1.0, pct);
-  */
+
   float time = u_time * 0.1;
   vec3 light_p = vec3(cos(time + u_poetry_progress*10.0) * 3.0,sin(time * 0.25 +  u_poetry_progress*3.0) * 2.0 - 1.0, 1.0);
-  float dp = dot(normalize(vec3(uv, 0.0) - light_p), fbm2);
+  float dp = dot(normalize(vec3(uv, 0.0) - light_p), v_fbm2);
   val += dp * 1.0 + 0.0;
   
   //fading in the dw noise
- float fade_in = clamp(vUV.y + u_poetry_progress - 1.4 - n0 * 1.0, 0.0, 1.0);
-//fade_in = 1.0;
+ float fade_in = clamp(vUV.y + u_poetry_progress - 2.1 - n0 * 1.0, 0.0, 1.0);
   
  val *= fade_in;
   
   //positions for circles
-  vec2 p1 = fract(p.xy * 0.25 - fbm2.xy * 0.01) - 0.5;
-  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - fbm2.xz * 0.005) - 0.5;
+  vec2 p1 = fract(p.xy * 0.25 - v_fbm2.xy * 0.01) - 0.5;
+  vec2 p2 = fract(((p.xy + 0.75) * rot(u_time * 2.0)) * n0 - v_fbm2.xz * 0.005) - 0.5;
 
     //adding  lines
-  vec2 uv2 = (p.xy - 0.4 - n.xy - fbm2.xy*0.005);
+  vec2 uv2 = (p.xy - 0.4 - n.xy - v_fbm2.xy*0.005);
   float l3 = (0.002 / abs(uv2.x)) + (0.002 / abs(uv2.y + 1.2));
   
   //adding circles
@@ -156,7 +150,7 @@ uv *= rot(-u_time * 0.5 + 180.0);
   
 
 
- val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5) * 1.5; //adding circles
+  val -= l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5) * 1.5; //adding circles
   val = max(val, min(0.9, l3 + l1)); // adding line
     
 
