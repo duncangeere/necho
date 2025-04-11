@@ -106,8 +106,10 @@ a {
   }
 }
 
+/*
 @media (max-width: 600px) {
   body, html, button {
     font-size: 140%;
   }
 }
+*/
