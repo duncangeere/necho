@@ -81,40 +81,12 @@ vec3 fbm2(vec3 x, float H )
         t += a*noise2(f*x);
         f *= 2.0;
         a *= G;
-      t.xz = t.yx;
-       x += t * 0.9;
+      t.xyz = t.yzx;
+       x += t * 1.0;
     }
   
-    return t * abs(t);
+    return t;
 }
-
-vec2 rand2( vec2 p)	{
-	return fract(vec2(sin(p.x * 591.32 + p.y * 154.077), cos(p.x * 391.32 + p.y * 49.077)));
-}
-float hash(float x) { return fract(x + 1.3215 * 1.8152); }
-
-float hash3(vec3 a) { return fract((hash(a.z * 42.8883) + hash(a.y * 36.9125) + hash(a.x * 65.4321)) * 291.1257); }
-
-vec3 rehash3(float x) { return vec3(hash(((x + 0.5283) * 59.3829) * 274.3487), hash(((x + 0.8192) * 83.6621) * 345.3871), hash(((x + 0.2157f) * 36.6521f) * 458.3971f)); }
-
-float sqr(float x) {return x*x;}
-float fastdist(vec3 a, vec3 b) { return sqr(b.x - a.x) + sqr(b.y - a.y) + sqr(b.z - a.z); }
-
-float eval(float x, float y, float z) {
-    vec4 p[27];
-    for (int _x = -1; _x < 2; _x++) for (int _y = -1; _y < 2; _y++) for(int _z = -1; _z < 2; _z++) {
-        vec3 _p = vec3(floor(x), floor(y), floor(z)) + vec3(_x, _y, _z);
-        float h = hash3(_p);
-        p[(_x + 1) + ((_y + 1) * 3) + ((_z + 1) * 3 * 3)] = vec4((rehash3(h) + _p).xyz, h);
-    }
-    float m = 9999.9999, w = 0.0;
-    for (int i = 0; i < 27; i++) {
-        float d = fastdist(vec3(x, y, z), p[i].xyz);
-        if(d < m) { m = d; w = p[i].w; }
-    }
-    return m * m;
-}
-
 
 
 
@@ -122,7 +94,9 @@ out vec4 fragColor;
 void main(){
   
   float wobblitude = cos(u_poetry_progress * 0.75 + PI) *0.5 + 0.5;
+ // wobblitude = 1.0;
   float shatter = cos(u_poetry_progress * 0.15 + PI) * 0.5 + 0.5;
+  shatter *= 0.5;
 
 float val = 0.0;
 vec3 col = vec3(0.0);
@@ -144,21 +118,26 @@ uv *= rot(-u_time * 0.5 + 180.0);
     
   
   //creating the noise and storing it in val
-  vec3 fbm2 = fbm2(p + n, 0.78);
-  float vor = eval(p.x * 2.0 + fbm2.x * 0.85 + n.x, p.y * 2.0 + fbm2.y * 0.85 + n.y, p.z + u_time * 0.1);
-  vor *= 1.5;
-  
+  vec3 fbm2 = fbm2(p * 1.5 + n, 0.78);
+
+  fbm2 = normalize(fbm2);
+
   //val += eval(p.x * n0, p.y * n0, p.z );
   
   float pct = smoothstep(0.0, 0.001, n0); //pct is set here
-
+/*
   float dw1 = abs(fbm2.x * 0.75);
   float dw2 = abs(-fbm2.z * 0.75);
-  val += mix(dw1, -dw2+1.0, pct);
+ // val += mix(dw1, -dw2+1.0, pct);
+  */
+  float time = u_time * 0.3;
+  vec3 light_p = vec3(cos(time) * 3.0,sin(time * 0.25) * 1.0 - 1.0, 1.0);
+  float dp = dot(normalize(vec3(uv, 0.0) - light_p), fbm2);
+  val += dp * 1.0 + 0.0;
   
   //fading in the dw noise
- float fade_in = clamp(vUV.y + u_poetry_progress - 1.1 - n0 * 1.0, 0.0, 1.0);
-  //fade_in = 1.0;
+ float fade_in = clamp(vUV.y + u_poetry_progress - 1.4 - n0 * 1.0, 0.0, 1.0);
+//fade_in = 1.0;
   
  val *= fade_in;
   
@@ -177,20 +156,17 @@ uv *= rot(-u_time * 0.5 + 180.0);
   
 
 
- val -= l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5) * 1.5; //adding circles
+ val += l2 * (cos(u_poetry_progress * PI + 0.0) * 0.5 + 0.5) * 1.5; //adding circles
   val = max(val, min(0.9, l3 + l1)); // adding line
     
-  vor = mix(vor, -vor *0.5, pct);
-  val += vor * fade_in;
 
-  //invert in grids
-  //vignette
-  val = -val+1.0;
+
+  val = mix(1.0- val, val, fade_in);
   float vig = clamp(abs(vUV.y * -0.5)+0.6, 0.05, 1.0); // vignette
- // vig = -vig+1.0;
+
   val *= vig * 0.8;
   
-  //adding hash noise
+
 
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
