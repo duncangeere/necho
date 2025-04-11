@@ -46,7 +46,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   canvas.id("bg"); // Assign an id to the canvas
   alpha: false,
-  pixelDensity(1.0);
+  pixelDensity(1.5);
   frameRate(30);
   shader(shader_file);
 
