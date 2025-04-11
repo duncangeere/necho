@@ -31,18 +31,18 @@ button {
     mix-blend-mode: luminosity;
     letter-spacing: 0.1em;
     color: #FFFFE6;
-max-width: 600px;
+    max-width: 600px;
     width: 75%;  
+    user-select: none; /* Disable text selection */
+    outline: none; /* Remove focus outline */
   }
 
 .words {
     pointer-events: none;
-    /*
     -webkit-user-select: none;
     -moz-user-select: none;     
     -ms-user-select: none;      
-    user-select: none;          
-    */
+    user-select: none;
     font-size: 22px;
     text-shadow: 0 0 6px rgba(0,0,0, 0.5);
   }
