@@ -38,6 +38,7 @@ function preload() {
 function setup() {
   // Assign the canvas to a variable
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  canvas.id("bg"); // Assign an id to the canvas
   alpha: false,
   pixelDensity(1.0);
   frameRate(30);
@@ -50,9 +51,21 @@ function setup() {
   textbox = select("#textDiv");
   updateText(); // Initialize the first text with fade-in effect
 
-  // Add event listeners for click and touchend
-  canvas.elt.addEventListener("click", handleInteraction);
-  canvas.elt.addEventListener("touchend", handleInteraction);
+  // Add an event listener for the background canvas to jump to the next node when clicked or touched
+  document.getElementById("bg").addEventListener("click", function () {
+    if (currentNode && currentNode.next) {
+      changeState(currentNode.next);
+    }
+  });
+
+  // Add event listener for textDiv to handle escape functionality
+  document.getElementById("textDiv").addEventListener("click", function () {
+    if (currentNode && currentNode.escape) {
+      changeState(currentNode.escape);
+    } else if (currentNode) {
+      changeState(currentNode.next);
+    }
+  });
 }
 
 function draw() {
@@ -119,23 +132,6 @@ function changeState(nextState) {
 function keyPressed() {
   if (key === " ") changeState(currentNode.next);
   if (key === "Escape" && currentNode.escape) changeState(currentNode.escape);
-}
-
-// Handles click or touch interactions
-function handleInteraction(event) {
-  const mouseX = event.clientX || event.touches[0].clientX;
-  const mouseY = event.clientY || event.touches[0].clientY;
-
-  if (mouseX > textbox.elt.offsetLeft && mouseX < textbox.elt.offsetLeft + textbox.elt.offsetWidth &&
-      mouseY > textbox.elt.offsetTop && mouseY < textbox.elt.offsetTop + textbox.elt.offsetHeight) {
-    if (currentNode.escape) {
-      changeState(currentNode.escape);
-    } else {
-      changeState(currentNode.next);
-    }
-  } else {
-    changeState(currentNode.next);
-  }
 }
 
 // Calculates distance between two points
