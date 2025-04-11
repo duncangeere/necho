@@ -96,7 +96,7 @@ function draw() {
   }
   textbox.style("opacity", opacity);
 
-  // Add a white border if the node can be escaped
+  // Add or remove the escapable class based on the current node
   if (currentNode.escape) {
     textbox.addClass("escapable");
   } else {
@@ -114,7 +114,10 @@ function updateText() {
   isTransitioning = true;
   fadeStartTime = millis();
   opacity = 0;
-  textbox.html(currentNode.text);
+
+  // Wrap the text in a child span for animation
+  const wrappedText = `<span class="nodeText">${currentNode.text}</span>`;
+  textbox.html(wrappedText);
 }
 
 // Handles state change with fade-out and fade-in transition

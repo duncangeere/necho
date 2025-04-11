@@ -32,8 +32,6 @@ max-width: 600px;
     pointer-events: none; 
   }
 
-}
-
 canvas {
 display: block;
 }
@@ -80,6 +78,20 @@ a {
 #splashButton:hover {
   background-color: #00264C;
   color: #FFFFE6; 
+}
+
+.escapable .nodeText {
+  display: inline-block; /* Ensure the text remains inline */
+  animation: subtleWave 6s infinite ease-in-out;
+}
+
+@keyframes subtleWave {
+  0%, 100% {
+    transform: translateY(0); /* No movement at start and end */
+  }
+  50% {
+    transform: translateY(-20px); /* Subtle upward movement */
+  }
 }
 
 @media (max-width: 600px) {
