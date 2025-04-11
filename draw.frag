@@ -105,7 +105,7 @@ void main(){
   vec3 p = vec3(uv * (2.0 + sin(u_time * 0.025 + PI)) * 0.5, -2.0) - n_transform * 0.1;
     
   //grid noise  
-  vec3 n = fbm(p * 1. - n_transform * 0.05, 1.0) * 1.0;
+  vec3 n = fbm(p * 1. - n_transform * 0.075, 1.0) * 1.0;
   float n0 = n.z;
   n *= shatter;
 
@@ -117,13 +117,14 @@ void main(){
   v_fbm2 = normalize(v_fbm2);
 
   float time = u_time * 0.1;
-  vec3 light_p = vec3(cos(time + u_poetry_progress*10.0) * 3.0,sin(time * 0.25 +  u_poetry_progress*3.0) * 2.0 - 1.0, 1.0);
+  vec3 light_p = vec3(cos(time + u_poetry_progress*3.0) * 8.0,sin(time * 0.25 +  u_poetry_progress*4.0) * 4.0 - 1.0, -2.0);
     
-  float dp = dot(normalize(vec3(uv, 0.0) - light_p), v_fbm2);
-  val += dp * 1.0 + 0.0;
+  float dp = dot(normalize(light_p), v_fbm2);
+  val += dp * 0.7 + 0.3;
     
   //fading the dw noise
   float fade_in = clamp(vUV.y * vUV.y + u_poetry_progress - 1.6 - n0 * 1.0, 0.0, 1.0);
+ // fade_in = 1.0;
   val *= fade_in;
     
   //positions of circles
@@ -152,7 +153,7 @@ void main(){
   val = clamp(val , 0.0, 1.0) * 0.9;
   val += (hash12(vUV.xy)-0.5)*0.2;
 
-  col = mix(vec3(0.0, 0.2, 0.40), vec3(1.1, 1.0, 0.9), val);
+  col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
     
  
