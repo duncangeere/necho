@@ -76,7 +76,7 @@ vec3 fbm2(vec3 x, float H ){
         t += a*noise2(f*x);
         f *= 2.0;
         a *= G;
-      t.xyz = t.yzx;
+      t.xyz = t.zxy;
        x += t * 1.0;
     }
   
@@ -87,7 +87,7 @@ out vec4 fragColor;
 void main(){
   
   float wobblitude = cos(u_poetry_progress * 0.75 + PI) *0.5 + 0.5;
-  float shatter = cos(u_poetry_progress * 0.15 + PI) * 0.5 + 0.5;
+  float shatter = cos(u_poetry_progress * 0.25 + PI) * 0.5 + 0.5;
   shatter *= 0.85;
 
   //initializing values
@@ -117,14 +117,14 @@ void main(){
   v_fbm2 = normalize(v_fbm2);
 
   float time = u_time * 0.1;
-  vec3 light_p = vec3(cos(time + u_poetry_progress*3.0) * 8.0,sin(time * 0.25 +  u_poetry_progress*4.0) * 4.0 - 1.0, -2.0);
+  vec3 light_p = vec3(cos(u_poetry_progress*8.0) * 1.0,sin(time * 0.45 +  u_poetry_progress*4.0) * 1.0, .2);
     
-  float dp = dot(normalize(light_p), v_fbm2);
-  val += dp * 0.7 + 0.3;
+  float dp = dot(normalize(vec3(vUV * 2.0-1.0, 0.0)-light_p), v_fbm2);
+  val += dp * 0.9 + 0.1;
     
   //fading the dw noise
   float fade_in = clamp(vUV.y * vUV.y + u_poetry_progress - 1.6 - n0 * 1.0, 0.0, 1.0);
- // fade_in = 1.0;
+// fade_in = 1.0;
   val *= fade_in;
     
   //positions of circles
