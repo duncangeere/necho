@@ -88,7 +88,7 @@ void main(){
   
   float wobblitude = cos(u_poetry_progress * 0.75 + PI) *0.5 + 0.5;
   float shatter = cos(u_poetry_progress * 0.15 + PI) * 0.5 + 0.5;
-  shatter *= 0.5;
+  shatter *= 0.85;
 
   //initializing values
   float val = 0.0;
