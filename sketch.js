@@ -27,6 +27,9 @@ document.getElementById("splashButton").addEventListener("click", function () {
     changeState(currentNode.next);
   });
 
+// Hide the restart button initially
+document.getElementById("restartButton").style.display = "none";
+
 // Before doing anything else
 function preload() {
   // Load the data
@@ -108,6 +111,14 @@ function draw() {
   } else {
     textbox.removeClass("escapable");
   }
+
+  if (state === "ending") {
+    document.getElementById("restartButton").style.display = "block";
+    document.getElementById("restartButton").addEventListener("click", function () {
+      resetState();
+      document.getElementById("restartButton").style.display = "none";
+    });
+  }
 }
 
 // Updates the text and triggers a fade-in effect
@@ -138,6 +149,17 @@ function changeState(nextState) {
     fadeStartTime = millis();
     state = nextState;
     target += increment;
+  }
+}
+
+function resetState() {
+  if (!isTransitioning) {
+    fadeState = "out"; // Start fade-out transition
+    isTransitioning = true;
+    fadeStartTime = millis();
+    state = "01text_1";
+    target = 0.0;
+    poetry_progression = 0.0;
   }
 }
 

@@ -96,6 +96,28 @@ a {
   color: #FFFFE6; 
 }
 
+#restartButton {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: rgba(0, 38, 76, 0); /* No background for the button */
+  color: #FFFFE6;
+  border: 1px solid #FFFFE6; /* Light border */
+  border-radius: 5px;
+}
+
+#restartButton:hover {
+  color: rgba(0, 38, 76); /* Darker background on hover */
+  background-color: rgba(0, 38, 76, 1);
+  border: 1px solid #FFFFE6;
+  color: #FFFFE6; 
+}
+
 .escapable .words {
   display: inline-block; /* Ensure the text remains inline */
   animation: subtleWave 6s infinite ease-in-out;
