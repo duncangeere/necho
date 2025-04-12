@@ -151,7 +151,7 @@ void main(){
     
   //colors
   val = clamp(val , 0.0, 1.0) * 0.9;
-  val += (hash12(vUV.xy)-0.5)*0.2;
+  val += (hash12(vUV.xy)-0.5)*0.13;
 
   col = mix(vec3(0.0, 0.15, 0.30), vec3(1.1, 1.0, 0.9), val);
   col *= vig; 
