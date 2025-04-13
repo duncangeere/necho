@@ -32,6 +32,7 @@ vec3 noise(vec3 p){
 }
 
 vec3 noise2( in vec3 x ){
+    x += 55.0;
     vec3 i = floor(x);
     vec3 f = fract(x);
     f = f*f*(3.0-2.0*f);
@@ -77,7 +78,7 @@ vec3 fbm2(vec3 x, float H ){
         f *= 2.0;
         a *= G;
       t.xyz = t.zxy;
-       x += t * 1.0;
+       x += t.yzx * 1.0;
     }
   
     return t;
@@ -113,18 +114,18 @@ void main(){
   float pct = smoothstep(0.0, 0.001, n0); //pct is set here
   
   //fbm2
-  vec3 v_fbm2 = fbm2(p * 1.5 + n, 0.78);
+  vec3 v_fbm2 = fbm2(p * 1.5 , 0.78);
   v_fbm2 = normalize(v_fbm2);
 
   float time = u_time * 0.1;
   vec3 light_p = vec3(cos(u_poetry_progress*8.0) * 1.0,sin(time * 0.45 +  u_poetry_progress*4.0) * 1.0, .2);
     
-  float dp = dot(normalize(vec3(vUV * 2.0-1.0, 0.0)-light_p), v_fbm2);
+  float dp = dot(normalize(vec3(vUV * 2.0-1.0, 0.0)-light_p + n*2.0), v_fbm2);
   val += dp * 0.9 + 0.1;
     
   //fading the dw noise
   float fade_in = clamp(vUV.y * vUV.y + u_poetry_progress - 1.6 - n0 * 1.0, 0.0, 1.0);
-// fade_in = 1.0;
+ //fade_in = 1.0;
   val *= fade_in;
     
   //positions of circles
