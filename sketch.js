@@ -7,6 +7,7 @@ let rawData, data, currentNode, textbox, canvas;
 
 // Track the current location in the network
 let state = "preload";
+let language = "swedish"; // Default language
 
 // Shader variables
 let poetry_progression = 0.0;
@@ -133,7 +134,7 @@ function updateText() {
   opacity = 0;
 
   // Wrap each word in a span for animation
-  const words = currentNode.text.split(" ");
+  const words = currentNode[language].split(" ");
   let wrappedWords = words
     .map((word, index) => `<span class="words" style="animation-delay: ${index * 0.2}s;">${word}</span>`)
     .join(" ");
@@ -172,4 +173,30 @@ function keyPressed() {
 // Calculates distance between two points
 function distance(x1, y1, x2, y2) {
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+}
+
+function switchLang() {
+  // Look up current language
+  const otherLang = langElement.innerText.trim();
+
+  // Change the language
+  if (otherLang === "English") {
+    language = "english";
+    document.documentElement.setAttribute('lang', "en");
+    document.getElementById("lang").innerText = "Svenska";
+    document.getElementById("introText").innerText = "Siktdjup is an interactive poetry experience, created for Kontradiktion. Click, tap, or use the space bar to navigate through the text. If you get stuck in a loop, try to get out of it.";
+    document.getElementById("credit1").innerHTML = 'Poetry & concept: <a href="https://arvidsdotter.se/" target="_blank">Anna Arvidsdotter</a>';
+    document.getElementById("credit2").innerHTML = 'Visuals & concept: <a href="https://www.simondavidryden.com/" target="_blank">Simon David Rydén</a>';
+    document.getElementById("credit3").innerHTML = 'Code & concept: <a href="http://www.duncangeere.com" target="_blank">Duncan Geere</a>';
+    document.getElementById("splashButton").innerText = "Begin";
+  } else if (otherLang === "Svenska") {
+    language = "swedish";
+    document.documentElement.setAttribute('lang', "se");
+    document.getElementById("lang").innerText = "English";
+    document.getElementById("introText").innerText = "Siktdjup är en interaktiv poesiupplevelse, skapad för Kontradiktion. Klicka, tryck eller använd mellanslagstangenten för att navigera dig genom dikten. Skulle du fastna i en loop, försök att ta dig ur den.";
+    document.getElementById("credit1").innerHTML = 'Poesi & koncept: <a href="https://arvidsdotter.se/" target="_blank">Anna Arvidsdotter</a>';
+    document.getElementById("credit2").innerHTML = 'Grafik & koncept: <a href="https://www.simondavidryden.com/" target="_blank">Simon David Rydén</a>';
+    document.getElementById("credit3").innerHTML = 'Kod & koncept: <a href="http://www.duncangeere.com" target="_blank">Duncan Geere</a>';
+    document.getElementById("splashButton").innerText = "Börja här";
+  }
 }

@@ -37,6 +37,13 @@ button {
     outline: none; /* Remove focus outline */
   }
 
+#lang {
+  padding-top: 20px;
+  font-size: 90%;
+  text-decoration: underline;
+  font-weight: lighter;
+}
+
 .words {
     pointer-events: none;
     -webkit-user-select: none;
