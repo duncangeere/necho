@@ -42,6 +42,7 @@ button {
   font-size: 90%;
   text-decoration: underline;
   font-weight: lighter;
+  cursor: pointer;
 }
 
 .words {
