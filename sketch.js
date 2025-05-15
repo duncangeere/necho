@@ -186,17 +186,19 @@ function switchLang() {
     document.getElementById("lang").innerText = "Svenska";
     document.getElementById("introText").innerText = "Siktdjup is an interactive poetry experience, created for Kontradiktion. Click, tap, or use the space bar to navigate through the text. If you get stuck in a loop, try to get out of it.";
     document.getElementById("credit1").innerHTML = 'Poetry & concept: <a href="https://arvidsdotter.se/" target="_blank">Anna Arvidsdotter</a>';
-    document.getElementById("credit2").innerHTML = 'Visuals & concept: <a href="https://www.simondavidryden.com/" target="_blank">Simon David Rydén</a>';
+    document.getElementById("credit2").innerHTML = 'Visuals & concept: <a href="https://www.simondavidryden.me/" target="_blank">Simon David Rydén</a>';
     document.getElementById("credit3").innerHTML = 'Code & concept: <a href="http://www.duncangeere.com" target="_blank">Duncan Geere</a>';
     document.getElementById("splashButton").innerText = "Begin";
+    document.getElementById("restartButton").innerText = "Back to the beginning";
   } else if (otherLang === "Svenska") {
     language = "swedish";
     document.documentElement.setAttribute('lang', "se");
     document.getElementById("lang").innerText = "English";
     document.getElementById("introText").innerText = "Siktdjup är en interaktiv poesiupplevelse, skapad för Kontradiktion. Klicka, tryck eller använd mellanslagstangenten för att navigera dig genom dikten. Skulle du fastna i en loop, försök att ta dig ur den.";
     document.getElementById("credit1").innerHTML = 'Poesi & koncept: <a href="https://arvidsdotter.se/" target="_blank">Anna Arvidsdotter</a>';
-    document.getElementById("credit2").innerHTML = 'Grafik & koncept: <a href="https://www.simondavidryden.com/" target="_blank">Simon David Rydén</a>';
+    document.getElementById("credit2").innerHTML = 'Grafik & koncept: <a href="https://www.simondavidryden.me/" target="_blank">Simon David Rydén</a>';
     document.getElementById("credit3").innerHTML = 'Kod & koncept: <a href="http://www.duncangeere.com" target="_blank">Duncan Geere</a>';
     document.getElementById("splashButton").innerText = "Börja här";
+    document.getElementById("restartButton").innerText = "Tillbaka till begynnelsen";
   }
 }
