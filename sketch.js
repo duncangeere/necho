@@ -177,7 +177,7 @@ function distance(x1, y1, x2, y2) {
 
 function switchLang() {
   // Look up current language
-  const otherLang = langElement.innerText.trim();
+  const otherLang = document.getElementById("lang").innerText.trim();
 
   // Change the language
   if (otherLang === "English") {
