@@ -28,7 +28,7 @@ button {
     padding: 10px;
     border-radius: 0px;
     z-index: 20;
-    mix-blend-mode: luminosity;
+    mix-blend-mode: normal;
     letter-spacing: 0.1em;
     color: #FFFFE6;
     max-width: 600px;
